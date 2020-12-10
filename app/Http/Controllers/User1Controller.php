@@ -3,7 +3,7 @@
     
     use Illuminate\Http\Request;
 	use Illuminate\Http\Response;
-    // use App\Models\User;
+    use App\Models\User;
     use App\Services\User1Service;
     use App\Traits\ApiResponser;
     use DB;

@@ -6,6 +6,7 @@ require_once __DIR__.'/../vendor/autoload.php';
     dirname(__DIR__)
 ))->bootstrap();
 
+date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -26,6 +27,7 @@ $app->withFacades();
 $app->withEloquent();
 
 $app->configure('services');
+$app->configure('auth');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -47,6 +49,8 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->configure('app');
+
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -62,10 +66,10 @@ $app->singleton(
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
-
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'client.credentials' => Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+]);
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -77,9 +81,12 @@ $app->singleton(
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(Laravel\Passport\PassportServiceProvider::class);
+$app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
+
 
 /*
 |--------------------------------------------------------------------------
